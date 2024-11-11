@@ -1,0 +1,505 @@
+#count number of cases
+#["Requisitante", "Vlr. Unitário"]
+#display(tabela["Vlr. Unitário"].value_counts())
+#display(tabela["", "", ""].value_counts())
+#display(tabela[""].value_counts(normalize=True))
+#display(tabela[""].value_counts(normalize=True).map("{:.1%}".format))
+
+#----------Se 'tabela'- estej carrgd c/ dados
+#-----------Ler-arqv CSV using . e , como delimitador
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#----------Convert-coluna('Vlr. Unitário')p/tipo numérico
+tabela['Vlr. Unitário'] = pd.to_numeric(tabela['Vlr. Unitário'], errors='coerce')
+#---------Removr linhas q n podm ser convertids(resultando em NaN)
+tabela = tabela.dropna(subset=['Vlr. Unitário'])
+#---------Filtrar os valores de 'Vlr. Unitário' que estão abaixo de 6
+filtro = tabela[tabela['Vlr. Unitário'].between(0, 6, inclusive='left')]
+#--------Contar as ocorrências de 'Requisitante' para os valores filtrados
+ocorrencias = filtro['Requisitante'].value_counts()
+#--------Exib-resultado
+display(ocorrencias)
+
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros'])
+#----------Add uma coluna para quilometragem por litro
+tabela['Km por Litro'] = tabela['Km Rodados'] / tabela['Litros']
+#----------Agrupar por tipo de veículo e calc-média de quilometragem-litro
+media_km_por_litro = tabela.groupby('Veículo/Equip.')['Km por Litro'].mean().reset_index()
+#----------Exib resultado
+display(media_km_por_litro)
+
+
+import pandas as pd
+# Carregar o CSV=>c/.|, as-delimitador
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#-----Exib-algums linhas-do-DataFrame carregd
+print("Primeiras linhas da tabela carregada:")
+display(tabela.head())
+#-----Convert column 'Km Rodados'/'Litros' p/ numérico
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+#-----Exib algumas lines-pós-conversão p/ tipo numérico
+print("Após conversão para tipo numérico:")
+display(tabela.head())
+#-----Remov line q 'Km Rodados'/'Litros' n pudm b convtid
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros'])
+#----Exib N°-lines dps->remoç d'NaNs
+print(f"Número de linhas após remoção de NaNs: {len(tabela)}")
+#----Add 1 colum p/ quilometrag-lt
+tabela['Km por Litro'] = tabela['Km Rodados'] / tabela['Litros']
+#----Exib coluns('Km por Litro', 'Km Rodados' e 'Litros')
+print("Colunas 'Km por Litro', 'Km Rodados' e 'Litros':")
+display(tabela[['Km por Litro', 'Km Rodados', 'Litros']])
+
+
+import pandas as pd
+#----Carregr CSV using .|, as delimitadr(ajust)
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#----Convert coluns('Km Rodados'/'Litros')p/ numéric
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+#----Remov line->'Km Rodados'/'Litros' qn pudrm b converted(result NaN)
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros'])
+#----Verific->all lines 've numéric'values válids
+tabela = tabela[(tabela['Km Rodados'].apply(lambda x: isinstance(x, (int, float))) & 
+                 tabela['Litros'].apply(lambda x: isinstance(x, (int, float))))]
+
+#----Add 1 coluna p/ quilometrgm por litro
+tabela['Km por Litro'] = tabela['Km Rodados'] / tabela['Litros']
+#----Exibir as colunas 'Km por Litro', 'Km Rodados' e 'Litros'
+display(tabela[['Km por Litro', 'Km Rodados', 'Litros']])
+
+
+import pandas as pd
+#----Carreg-CSV usand . e , as delimitadr
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+
+#----Exib 1s lines d'DataFrame carregd
+print("Primeiras linhas da tabela carregada:")
+display(tabela.head())
+#----Remov 2 últims dígits/vírguls d'colun('Litros')
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+#----Convert as coluns 'Km Rodados' e 'Litros' p/ tip numéric
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+
+#----Verific se-conversão foi bem-sucedida
+print("Tipos das colunas após conversão:")
+print(tabela[['Km Rodados', 'Litros']].dtypes)
+#-----Remover linhas onde 'Km Rodados' ou 'Litros' n pudrm b converted(resultnd NaN)
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros'])
+#-----Verific-dados dps-remoção NaNs
+print("Primeiras linhas após remoção de NaNs:")
+display(tabela.head())
+#-----Verific N°-lines->dps-remoção(NaNs)
+print(f"Número de linhas após remoção de NaNs: {len(tabela)}")
+
+#-----Add colun p/ quilometragem por litro
+tabela['Km por Litro'] = tabela['Km Rodados'] / tabela['Litros']
+#-----Exibr coluns-'Km por Litro', 'Km Rodados' e 'Litros'
+print("Colunas 'Km por Litro', 'Km Rodados' e 'Litros':")
+display(tabela[['Km por Litro', 'Km Rodados', 'Litros']])
+
+#------filter cases
+filtro = tabela["ligacoes_callcenter"]<=4
+tabela = tabela[filtro]
+#------filter cases
+filtro = tabela["dias_atraso"]<=20
+tabela = tabela[filtro]
+#------filter cases
+filtro = tabela["duracao_contrato"]!="Montly"
+tabela = tabela[filtro]
+#------display(tabela["cancelou"].value_counts(normalize=True))
+display(tabela["cancelou"].value_counts(normalize=True).map("{:.1%}".format))
+
+import pandas as pd
+#------Ler arqv-CSV
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#------Tratament->colunas 'Litros'/'Km Rodados'
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+#------Remoção->linhas c/ NaNs em 'Km Rodados'/'Litros'
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros'])
+#-------Cálc->'Km por Litro'
+tabela['Km por Litro'] = tabela['Km Rodados'] / tabela['Litros']
+tabela['Km por Litro'] = tabela['Km por Litro'].round(3)
+#--------Agrupamento por 'Veículo/Equip.', 'Requisitante' e 'Data Req.'
+agrupado = tabela.groupby(['Veículo/Equip.', 'Requisitante', 'Data Req.'])['Km por Litro'].mean().reset_index()
+#--------Ordem-p/ priorizar valrs-('Km por Litro'/'Veículo/Equip.')
+agrupado = agrupado.sort_values(by=['Veículo/Equip.', 'Km por Litro'], ascending=[True, False])
+#-------Exibr-results
+display(agrupado)
+
+
+#-----------------------Código está muito "Pesado" p/ Rodar..
+import pandas as pd
+import plotly.express as px
+
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+colunas_para_excluir = ["Requisição", "Hora Abast.", "Obs.", "Abast. Externo", "Data Req."]
+
+colunas_existentes = [col for col in colunas_para_excluir if col in tabela.columns]
+if colunas_existentes:
+    tabela = tabela.drop(columns=colunas_existentes)
+else:
+    print("Nenhuma das colunas especificadas foi encontrada no DataFrame.")
+#-------------------------display(tabela)
+tabela = tabela.dropna()
+
+for coluna in tabela.columns:
+    grafico = px.histogram(tabela, x=coluna, color="Km Rodados")
+    #-----------------------show the graphic
+    grafico.show()
+
+#----------------------------------------Compact-Sum-Group:
+import pandas as pd
+import plotly.express as px
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+colunas_para_excluir = ["Requisição", "Hora Abast.", "Obs.", "Abast. Externo", "Data Req.", "Combustível", "Horim. Equip.", "Vlr. Unitário"]
+
+colunas_existentes = [col for col in colunas_para_excluir if col in tabela.columns]
+if colunas_existentes:
+    tabela = tabela.drop(columns=colunas_existentes)
+else:
+    print("Nenhuma das colunas especificadas foi encontrada no DataFrame.")
+
+tabela = tabela.dropna()
+#display(tabela)
+#print("Primeiras linhas da tabela carregada:")
+#display(tabela.head())
+
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Vlr. Total'] = tabela['Vlr. Total'].astype(str).str.replace(',', '')#.str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+tabela['Vlr. Total'] = pd.to_numeric(tabela['Vlr. Total'], errors='coerce')
+tabela['Km Atual'] = pd.to_numeric(tabela['Km Atual'], errors='coerce')
+#print("Primeiras linhas após conversão para tipo numérico:")
+#display(tabela.head())
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros', 'Vlr. Total', 'Km Atual', 'Veículo/Equip.', 'Requisitante'])
+#print(f"Número de linhas após remoção de NaNs: {len(tabela)}")
+#print("Primeiras linhas após remoção de NaNs:")
+#display(tabela.head())
+agrupado = tabela.groupby(['Veículo/Equip.', 'Requisitante']).agg({
+    'Litros': 'sum',
+    'Vlr. Total': 'sum',
+    'Km Rodados': 'sum',
+    'Km Atual': 'max'
+}).reset_index()
+print("DataFrame agrupado:")
+#display(agrupado)
+
+
+
+
+
+#--------Exibir as primeiras linhas do DataFrame para verificar o conteúdo inicial
+print("Primeiras linhas da tabela carregada:")
+display(tabela.head())
+#-------------Tratamento das colunas 'Litros' e 'Km Rodados'
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Vlr. Total'] = tabela['Vlr. Total'].astype(str).str.replace(',', '')#.str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+tabela['Vlr. Total'] = pd.to_numeric(tabela['Vlr. Total'], errors='coerce')
+tabela['Km Atual'] = pd.to_numeric(tabela['Km Atual'], errors='coerce')
+#------------------Exibir as primeiras linhas após a conversão para tipo numérico
+print("Primeiras linhas após conversão para tipo numérico:")
+display(tabela.head())
+#---------------------Remoção de linhas com NaNs nas colunas importantes
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros', 'Vlr. Total', 'Km Atual', 'Veículo/Equip.', 'Requisitante'])
+#---------------Verificar se as linhas foram removidas corretamente
+print(f"Número de linhas após remoção de NaNs: {len(tabela)}")
+print("Primeiras linhas após remoção de NaNs:")
+display(tabela.head())
+#--------------Agrupar os dados por 'Veículo/Equip.' e 'Requisitante' e somar as colunas 'Litros', 'Vlr. Total' e 'Km Rodados'
+agrupado = tabela.groupby(['Veículo/Equip.', 'Requisitante']).agg({
+    'Litros': 'sum',
+    'Vlr. Total': 'sum',
+    'Km Rodados': 'sum',
+    'Km Atual': 'max'
+}).reset_index()
+#--------------------Exibir o DataFrame resultante
+#print("DataFrame agrupado:")
+#display(agrupado)
+#-----------------------------Adicionar coluna 'Km por Litro'
+agrupado['Km por Litro'] = agrupado['Km Rodados'] / agrupado['Litros']
+#--------------Formatar colunas 'Litros' e 'Vlr. Total' para incluir vírgulas
+agrupado['Litros'] = agrupado['Litros'].apply(lambda x: '{:,.2f}'.format(x))
+agrupado['Vlr. Total'] = agrupado['Vlr. Total'].apply(lambda x: '{:,.2f}'.format(x))
+#--------------------Exibir o DataFrame resultante para verificar a formatação
+print("DataFrame agrupado com formatação de vírgulas:")
+display(agrupado)
+
+
+#--------------Select->5+ e 5- vlrs d'Km por Litro'
+top5 = agrupado.nlargest(5, 'Km por Litro')
+bottom5 = agrupado.nsmallest(5, 'Km por Litro')
+#--------------Combinaç- 2 conjnts d'dados
+top_bottom = pd.concat([top5, bottom5])
+#---------------T/Create gráfic
+fig = px.bar(top_bottom, x='Veículo/Equip.', y='Km por Litro', color='Km por Litro', color_continuous_scale=[(0, 'blue'), (0.5, 'blue'), (0.5, 'red'), (1, 'red')], hover_data=['Requisitante'])
+fig.update_layout(title="Top 5 e Bottom 5 Veículos/Equipamentos por Km por Litro", xaxis_title="Veículo/Equip.", yaxis_title="Km por Litro", xaxis_tickangle=-45)
+#------------------Exib gráfic
+fig.show()
+
+
+#------------Function=> gerar 1 gráfc p-vez
+def gerar_graficos_separados(tabela, colunas):
+    for coluna in colunas:
+        grafico = px.histogram(tabela, x=coluna, color="Km Rodados")
+        grafico.show()
+        input("Pressione Enter para continuar para o próximo gráfico...")
+#--------------Tabela já foi carregada e tratad
+colunas_para_graficos = [coluna for coluna in tabela.columns if coluna != "Km Rodados"]
+#--------------Gráficos 1 at time
+gerar_graficos_separados(tabela, colunas_para_graficos)
+
+
+
+
+CÓDIGO P/ DEFINIR MARGEM DE LUCRO:
+
+import pandas as pd
+import plotly.express as px
+#------------------------read-arqv-CSV
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#-------------------------------Colunsp/excluir
+colunas_para_excluir = ["Requisição", "Hora Abast.", "Obs.", "Abast. Externo", "Data Req.", "Combustível", "Horim. Equip.", "Vlr. Unitário"]
+#------------------------Filtrgm->coluns existnts
+colunas_existentes = [col for col in colunas_para_excluir if col in tabela.columns]
+if colunas_existentes:
+    tabela = tabela.drop(columns=colunas_existentes)
+else:
+    print("Nenhuma das colunas especificadas foi encontrada no DataFrame.")
+#----------------------------Remoç-d'NaNs
+tabela = tabela.dropna()
+#--------------------Tratmnt-coluns'Litros'/'Km Rodados'
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Vlr. Total'] = tabela['Vlr. Total'].astype(str).str.replace(',', '')#.str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+tabela['Vlr. Total'] = pd.to_numeric(tabela['Vlr. Total'], errors='coerce')
+tabela['Km Atual'] = pd.to_numeric(tabela['Km Atual'], errors='coerce')
+#-----------------------Remoç lines c/NaNs in coluns importants
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros', 'Vlr. Total', 'Km Atual', 'Veículo/Equip.', 'Requisitante'])
+#------------------------Agrup-dados p-'Veículo/Equip.','Requisitante'/+ coluns'Litros','VlrTotal','Km Rodados'
+agrupado = tabela.groupby(['Veículo/Equip.', 'Requisitante']).agg({
+    'Litros': 'sum',
+    'Vlr. Total': 'sum',
+    'Km Rodados': 'sum',
+    'Km Atual': 'max'
+}).reset_index()
+#---------------------Calc-métric-lucro
+agrupado['Lucro'] = agrupado['Km Rodados'] - agrupado['Vlr. Total']
+#--------------------Select 10'Veículo/Equip.' c/+lucro&&10c/-lucro
+top10_lucro = agrupado.nlargest(10, 'Lucro')
+bottom10_lucro = agrupado.nsmallest(10, 'Lucro')
+#-----------------Combin-2 conjnts d'dados
+top_bottom_lucro = pd.concat([top10_lucro, bottom10_lucro])
+#--------------------Create-grfc
+fig = px.bar(top_bottom_lucro, x='Veículo/Equip.', y='Lucro', color='Lucro',
+             color_continuous_scale=[(0, 'blue'), (0.5, 'blue'), (0.5, 'red'), (1, 'red')],
+             hover_data=['Requisitante'])
+fig.update_layout(title="Top 10 e Bottom 10 Veículos/Equipamentos por Lucro",
+                  xaxis_title="Veículo/Equip.",
+                  yaxis_title="Lucro (Km Rodados - Vlr. Total)",
+                  xaxis_tickangle=-45)
+#--------------------Exib-grfc
+fig.show()
+
+
+
+
+import pandas as pd
+import plotly.express as px
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros', 'Veículo/Equip.'])
+tabela = tabela[tabela['Veículo/Equip.'] != 'GERADOR']
+tabela['Km por Litro'] = tabela['Km Rodados'] / tabela['Litros']
+media_km_por_litro_por_veiculo = tabela.groupby('Veículo/Equip.')['Km por Litro'].mean().reset_index()
+media_km_por_litro_por_veiculo = media_km_por_litro_por_veiculo.rename(columns={'Km por Litro': 'Media Km por Litro'})
+tabela = tabela.merge(media_km_por_litro_por_veiculo, on='Veículo/Equip.', how='left')
+veiculos_abaixo_da_media = media_km_por_litro_por_veiculo.nsmallest(25, 'Media Km por Litro')['Veículo/Equip.']
+tabela_filtrada = tabela[tabela['Veículo/Equip.'].isin(veiculos_abaixo_da_media)]
+grafico = px.histogram(tabela_filtrada, x='Veículo/Equip.', y='Km por Litro', color='Media Km por Litro',
+             title="Comparação dos Veículos/Equipamentos com Média de Km por Litro Mais Baixa",
+             hover_data=['Requisitante'])
+grafico.update_layout(xaxis_title="Veículo/Equip.",
+                  yaxis_title="Km por Litro",
+                  xaxis_tickangle=-45,
+                  bargap=0.2)  # Ajuste de espaçamento entre as barras
+grafico.show()
+
+
+
+
+#-----------------------------------------Consulta c/ remoção
+#-----------------------------------------de Valores(Strings) especificas
+#-----------------------------------------em 'Veículo/Equip.' (exemplo: "GERADOR")
+
+
+import pandas as pd
+import plotly.express as px
+#---------------Ler arqv CSV
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#---------------Solicit mês/ano d user
+mes = input("Digite o mês (01-12): ")
+ano = input("Digite o ano (AAAA): ")
+#----------------Coluns p/excl
+colunas_para_excluir = ["Requisição", "Horim. Equip.", "Hora Abast.", "Obs.", "Abast. Externo"]
+colunas_existentes = [col for col in colunas_para_excluir if col in tabela.columns]
+if colunas_existentes:
+    tabela = tabela.drop(columns=colunas_existentes)
+else:
+    print("Nenhuma das colunas especificadas foi encontrada no DataFrame.")
+#----------------Tratament coluns 'Litros'/'Km Rodados'
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros', 'Veículo/Equip.'])
+#----------------Filtr p/excl-'GERADOR'
+tabela = tabela[tabela['Veículo/Equip.'] != 'GERADOR']
+#----------------Filtr tbl-mês/ano fornecd
+tabela['Data Req.'] = pd.to_datetime(tabela['Data Req.'], format='%d/%m/%Y', errors='coerce')
+tabela = tabela.dropna(subset=['Data Req.'])
+
+tabela_filtrada = tabela[(tabela['Data Req.'].dt.month == int(mes)) & (tabela['Data Req.'].dt.year == int(ano))]
+#-----------------Calc 'Km por Litro'/arredond p/3 casas decims
+tabela_filtrada['Km por Litro'] = (tabela_filtrada['Km Rodados'] / tabela_filtrada['Litros']).round(3)
+#-----------------Calc méd 'Km por Litro' p/ cada'Veículo/Equip.'/arredond p/ 3 casasdecims
+media_km_por_litro_por_veiculo = tabela_filtrada.groupby('Veículo/Equip.')['Km por Litro'].mean().round(3).reset_index()
+#-----------------Renomr colun p/ diferenciaç
+media_km_por_litro_por_veiculo = media_km_por_litro_por_veiculo.rename(columns={'Km por Litro': 'Media Km por Litro'})
+#------------------Mescl médi d volt tbl orignl
+tabela_filtrada = tabela_filtrada.merge(media_km_por_litro_por_veiculo, on='Veículo/Equip.', how='left')
+#------------------Filtr 25 veícul c/ média d 'Km por Litro'+low
+veiculos_abaixo_da_media = media_km_por_litro_por_veiculo.nsmallest(25, 'Media Km por Litro')['Veículo/Equip.']
+#------------------Filtr tbl p/ inclr apns veículs
+tabela_filtrada = tabela_filtrada[tabela_filtrada['Veículo/Equip.'].isin(veiculos_abaixo_da_media)]
+#------------------Criaç gráfc comparnd veícul abaix média
+grafico = px.histogram(tabela_filtrada, x='Veículo/Equip.', y='Km por Litro', color='Media Km por Litro',
+                       title="Comparação dos Veículos/Equipamentos com Média de Km por Litro Mais Baixa",
+                       hover_data=['Requisitante'])
+grafico.update_layout(xaxis_title="Veículo/Equip.",
+                      yaxis_title="Km por Litro",
+                      xaxis_tickangle=-45,
+                      bargap=0.2)  # Ajuste de espaçamento entre as barras
+#------------------Exib gráfc
+grafico.show()
+
+
+
+
+#------------------------------------------------Pesquisa por
+#-----------------------------------------------'Requisitante'
+#-----------------------------------------------------&
+#-----------------------------------------------'Veículo/Equip.'
+
+import pandas as pd
+#--------------------------------Ler arqv CSV
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#--------------------------------Solict nome requisitnt
+nameReq = input("Requisitante (exemplo: 'GESSE'): ")
+#--------------------------------Funç p/filtr dados nome requisitnt
+def name_Requ_value(nameReq, tabela):
+    driverName = nameReq
+    # Verificar se o nome do requisitante está na coluna 'Requisitante'
+    if tabela['Requisitante'].str.contains(driverName, case=False, na=False).any():
+        consultReq = tabela[tabela['Requisitante'].str.contains(driverName, case=False, na=False)]
+        # Mostrar veículos únicos para o motorista, sem afetar os dados originais
+        veiculos_unicos = consultReq['Veículo/Equip.'].unique()
+        print("Veículos do requisitante:", veiculos_unicos)
+        #------------------------Solict selectn veícul
+        selected_vehicles = input("Digite os veículos a serem selecionados (separados por vírgulas): ").split(',')
+        selected_vehicles = [vehicle.strip() for vehicle in selected_vehicles]
+        #-----------------------Filtr tbl veícul selectf
+        filtered_table = consultReq[consultReq['Veículo/Equip.'].isin(selected_vehicles)]
+        display(filtered_table)
+    else:
+        print("Não há 'Requisitante' com esse Nome!")
+#--------------------------------Call-functn-c/nome forncd/tbl
+name_Requ_value(nameReq, tabela)
+
+
+
+#--------------------------------------------Consulta c/ Gráficos
+#--------------------------------'Requisitante' & 'Veículo/Equip.' Especifico
+
+import pandas as pd
+import plotly.express as px
+#----------------------Ler arqv CSV
+tabela = pd.read_csv("Abastecimento_Caminhao.csv", delimiter=';', on_bad_lines='skip')
+#--------------------Coluns p/ exclu
+colunas_para_excluir = ["Requisição", "Horim. Equip.", "Vlr. Unitário"]
+colunas_existentes = [col for col in colunas_para_excluir if col in tabela.columns]
+if colunas_existentes:
+    tabela = tabela.drop(columns=colunas_existentes)
+else:
+    print("Nenhuma das colunas especificadas foi encontrada no DataFrame.")
+#--------------------Remov NaNs
+tabela = tabela.dropna()
+#--------------------Tratamnt-coluns 'Litros'/'Km Rodados'
+tabela['Litros'] = tabela['Litros'].astype(str).str.replace(',', '').str[:-2]
+tabela['Vlr. Total'] = tabela['Vlr. Total'].astype(str).str.replace(',', '')#.str[:-2]
+tabela['Km Rodados'] = pd.to_numeric(tabela['Km Rodados'], errors='coerce')
+tabela['Litros'] = pd.to_numeric(tabela['Litros'], errors='coerce')
+tabela['Vlr. Total'] = pd.to_numeric(tabela['Vlr. Total'], errors='coerce')
+tabela['Km Atual'] = pd.to_numeric(tabela['Km Atual'], errors='coerce')
+
+#print(tabela.dtypes)
+tabela = tabela.dropna(subset=['Km Rodados', 'Litros', 'Vlr. Total', 'Km Atual', 'Veículo/Equip.', 'Requisitante'])
+#-------------------Solict nome-requisitnt
+nameReq = input("Requisitante (exemplo: 'GESSE'): ")
+#-------------------Função filtr dados->nome-requisitnt
+def name_Requ_value(nameReq, tabela):
+    driverName = nameReq
+    # Verificar se o nome do requisitante está na coluna 'Requisitante'
+    if tabela['Requisitante'].str.contains(driverName, case=False, na=False).any():
+        consultReq = tabela[tabela['Requisitante'].str.contains(driverName, case=False, na=False)]
+        # Mostrar veículos únicos para o motorista
+        veiculos_unicos = consultReq['Veículo/Equip.'].unique()
+        print("Veículos do requisitante:", veiculos_unicos)
+        #-----------Solicit-seleção veículs
+        selected_vehicles = input("Digite os veículos a serem selecionados (separados por vírgulas): ").split(',')
+        selected_vehicles = [vehicle.strip() for vehicle in selected_vehicles]
+        #-----------Filtr-tabl->veícul selectd
+        filtered_table = consultReq[consultReq['Veículo/Equip.'].isin(selected_vehicles)]
+
+        ano = input("Digite o ano (AAAA): ")
+        #-----------Filtr tabl->ano fornecd
+        filtered_table['Data Req.'] = pd.to_datetime(filtered_table['Data Req.'], format='%d/%m/%Y', errors='coerce')
+        filtered_table = filtered_table.dropna(subset=['Data Req.'])
+        filtered_table['Ano'] = filtered_table['Data Req.'].dt.year
+        filtered_table['Mês'] = filtered_table['Data Req.'].dt.month
+        #-----------Filtr->ano fornecd
+        filtered_table = filtered_table[filtered_table['Ano'] == int(ano)]
+        #----------Garant->coluns estejm format corret
+        filtered_table['Litros'] = pd.to_numeric(filtered_table['Litros'], errors='coerce')
+        filtered_table['Km Rodados'] = pd.to_numeric(filtered_table['Km Rodados'], errors='coerce')
+        #----------Agrup-por mês/calc soma->valr needed
+        resumo_mensal = filtered_table.groupby('Mês').agg({
+            'Litros': 'sum',
+            'Km Rodados': 'sum'
+        }).reset_index()
+        #----------Calc Km por Litro
+        resumo_mensal['Km por Litro'] = resumo_mensal['Km Rodados'] / resumo_mensal['Litros']
+        #----------Criaç gráfc-mensal
+        fig = px.bar(resumo_mensal, x='Mês', y='Km por Litro',
+                     title=f"Desempenho Mensal de {driverName}",
+                     labels={'Km por Litro': 'Km por Litro', 'Mês': 'Mês'})
+        
+        fig.update_layout(xaxis_title="Mês", yaxis_title="Km por Litro")
+        
+        fig.show()
+    else:
+        print("Não há 'Requisitante' com esse Nome!")
+#----------------Call Function c/ nome fornecd/tabl
+name_Requ_value(nameReq, tabela)
+
